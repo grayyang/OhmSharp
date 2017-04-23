@@ -6,7 +6,7 @@ using System.Reflection;
 namespace OhmSharp.Convertion
 {
     /// <summary>
-    /// Entry class 
+    /// Provides methods to convert to or from RedisValue, and add support for additional types to convert
     /// </summary>
     public static class RedisValueConverter
     {
@@ -61,7 +61,8 @@ namespace OhmSharp.Convertion
             }
 
             throw new OhmSharpConvertionException(type,
-                string.Format("Failed to convert type '{0}' to RedisValue.", type.FullName), new NotSupportedException("No supported IRedisValueConverter found."));
+                string.Format("Failed to convert type '{0}' to RedisValue.", type.FullName), 
+                new NotSupportedException("No supported IRedisValueConverter found."));
         }
 
         /// <summary>
@@ -115,7 +116,8 @@ namespace OhmSharp.Convertion
             }
 
             throw new OhmSharpConvertionException(type,
-                string.Format("Failed to convert type '{0}' from RedisValue since no supported IRedisValueConverter found.", type.FullName));
+                string.Format("Failed to convert type '{0}' from RedisValue.", type.FullName), 
+                new NotSupportedException("No supported IRedisValueConverter found."));
         }
 
         /// <summary>
@@ -201,36 +203,5 @@ namespace OhmSharp.Convertion
         // Dictionary is used here as it is thread safe for reading
         private static readonly Dictionary<Type, IRedisValueConverter> _buildinConverters;
         private static readonly Dictionary<Type, IRedisValueConverter> _customConverters;
-    }
-
-    /// <summary>
-    /// Provides extenstion methods for RedisValue convertion
-    /// </summary>
-    public static class RedisValueExtension
-    {
-        /// <summary>
-        /// Convert RedisValue to type <typeparamref name="T"/>
-        /// </summary>
-        /// <typeparam name="T">type of object to return</typeparam>
-        /// <param name="value">RedisValue to convert</param>
-        /// <param name="provider">optional provider controls how value is converted</param>
-        /// <returns>object contained in the RedisValue</returns>
-        /// <exception cref="OhmSharpConvertionException">throw if convertion failed</exception>
-        public static T To<T>(this RedisValue value, IFormatProvider provider = null)
-        {
-            return RedisValueConverter.ConvertFrom<T>(value, provider);
-        }
-
-        /// <summary>
-        /// Convert object to RedisValue if supported
-        /// </summary>
-        /// <param name="value">object to convert</param>
-        /// <param name="provider">optional provider controls how value is converted</param>
-        /// <returns>RedisValue contains content of the object</returns>
-        /// <exception cref="OhmSharpConvertionException">throw if convertion failed</exception>
-        public static RedisValue ToRedisValue(this object value, IFormatProvider provider = null)
-        {
-            return RedisValueConverter.ConvertTo(value, value.GetType(), provider);
-        }
     }
 }

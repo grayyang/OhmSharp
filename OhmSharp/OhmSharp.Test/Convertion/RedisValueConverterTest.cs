@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OhmSharp.Convertion;
+using OhmSharp.Convertion.Extension;
 using StackExchange.Redis;
 
 namespace OhmSharp.Test.Convertion
