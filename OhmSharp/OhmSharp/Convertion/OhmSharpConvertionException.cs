@@ -3,7 +3,7 @@
 namespace OhmSharp.Convertion
 {
     /// <summary>
-    /// Exception indicate convertion failed from or to RedisValue
+    /// Exception indicates convertion failed from or to RedisValue
     /// </summary>
     public class OhmSharpConvertionException : OhmSharpException
     {

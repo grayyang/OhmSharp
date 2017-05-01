@@ -10,8 +10,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Mapping\" />
     <Folder Include="Collection\" />
+    <Folder Include="Mapping\Identity\" />
+    <Folder Include="Mapping\Index\" />
+    <Folder Include="Mapping\Schema\" />
   </ItemGroup>
 
 </Project>

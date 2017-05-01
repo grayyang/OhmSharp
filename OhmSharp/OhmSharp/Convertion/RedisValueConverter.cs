@@ -17,6 +17,7 @@ namespace OhmSharp.Convertion
         /// <param name="value">value to convert to RedisValue</param>
         /// <param name="provider">optional provider controls how value is converted</param>
         /// <returns>RedisValue contains the underlying value</returns>
+        /// <exception cref="ArgumentNullException">throw if <paramref name="value"/> or <paramref name="type"/> is null</exception>
         /// <exception cref="OhmSharpConvertionException">throw if convertion failed</exception>
         public static RedisValue ConvertTo<T>(T value, IFormatProvider provider = null)
         {
@@ -30,10 +31,12 @@ namespace OhmSharp.Convertion
         /// <param name="type">type of value to convert</param>
         /// <param name="provider">optional provider controls how value is converted</param>
         /// <returns>RedisValue contains the underlying value</returns>
+        /// <exception cref="ArgumentNullException">throw if <paramref name="value"/> or <paramref name="type"/> is null</exception>
         /// <exception cref="OhmSharpConvertionException">throw if convertion failed</exception>
-        /// <exception cref="ArgumentNullException">throw if type is null</exception>
         public static RedisValue ConvertTo(object value, Type type, IFormatProvider provider = null)
         {
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
             if (type == null)
                 throw new ArgumentNullException(nameof(type));
 
@@ -86,7 +89,7 @@ namespace OhmSharp.Convertion
         /// <param name="provider">optional provider controls how value is converted</param>
         /// <returns>object contained in the RedisValue</returns>
         /// <exception cref="OhmSharpConvertionException">throw if convertion failed</exception>
-        /// <exception cref="ArgumentNullException">throw if type is null</exception>
+        /// <exception cref="ArgumentNullException">throw if <paramref name="type"/> is null</exception>
         public static object ConvertFrom(RedisValue value, Type type, IFormatProvider provider = null)
         {
             if (type == null)
@@ -138,7 +141,7 @@ namespace OhmSharp.Convertion
         /// </summary>
         /// <param name="type">type to convert</typeparam>
         /// <param name="converter">cumtomer IRedisValueConverter to registyer</param>
-        /// <exception cref="ArgumentNullException">throw if type or convert is null</exception>
+        /// <exception cref="ArgumentNullException">throw if <paramref name="type"/> or <paramref name="converter"/> is null</exception>
         public static void RegisterConverter(Type type, IRedisValueConverter converter)
         {
             if (type == null)
@@ -162,7 +165,7 @@ namespace OhmSharp.Convertion
         /// Unregister a customer IRedisValueConverter used to convert <paramref name="type"/> from or to RedisValue
         /// </summary>
         /// <param name="type">type to unregister for</param>
-        /// <exception cref="ArgumentNullException">throw if type is null</exception>
+        /// <exception cref="ArgumentNullException">throw if <paramref name="type"/> is null</exception>
         public static void UnregisterConverter(Type type)
         {
             if (type == null)
