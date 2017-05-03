@@ -37,14 +37,13 @@ namespace OhmSharp.Mapping
         }
     }
 
-    internal class MappingObjectAttributeParser : ITypeAttributeParser
+    internal class MappingObjectAttributeParser : TypeAttributeParser<MappingObjectAttribute>
     {
-        public void Parse(TypeInfo typeInfo, TypeMetadata typeMetadata)
+        protected override void Parse(MappingObjectAttribute attribute, TypeMetadata typeMetadata)
         {
-            var attribute = typeInfo.GetCustomAttribute<MappingObjectAttribute>();
             if (attribute != null)
             {
-                typeMetadata.KeyName = attribute.Name ?? typeInfo.FullName;
+                typeMetadata.KeyName = attribute.Name ?? typeMetadata.KeyName;
                 typeMetadata.Concurrency = attribute.Concurrency;
             }
         }

@@ -16,19 +16,9 @@ namespace OhmSharp.Mapping
         { }
     }
 
-    internal class MappingIndexAttributeParser : IMemberAttributeParser
+    internal class MappingIndexAttributeParser : MemberAttributeParser<MappingIndexAttribute>
     {
-        public void Parse(FieldInfo fieldInfo, TypeMetadata typeMetadata, MemberMetadata memberMetadata)
-        {
-            Parse(fieldInfo.GetCustomAttribute<MappingIndexAttribute>(), typeMetadata, memberMetadata);
-        }
-
-        public void Parse(PropertyInfo propertyInfo, TypeMetadata typeMetadata, MemberMetadata memberMetadata)
-        {
-            Parse(propertyInfo.GetCustomAttribute<MappingIndexAttribute>(), typeMetadata, memberMetadata);
-        }
-
-        private void Parse(MappingIndexAttribute attribute, TypeMetadata typeMetadata, MemberMetadata memberMetadata)
+        protected override void Parse(MappingIndexAttribute attribute, TypeMetadata typeMetadata, MemberMetadata memberMetadata)
         {
             if (attribute != null)
             {

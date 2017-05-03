@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OhmSharp.Convertion;
+using System;
 using System.Reflection;
 
 namespace OhmSharp.Mapping
@@ -17,19 +18,9 @@ namespace OhmSharp.Mapping
         { }
     }
 
-    internal class MappingConcurrencyAttributeParser : IMemberAttributeParser
+    internal class MappingConcurrencyAttributeParser : MemberAttributeParser<MappingConcurrencyAttribute>
     {
-        public void Parse(FieldInfo fieldInfo, TypeMetadata typeMetadata, MemberMetadata memberMetadata)
-        {
-            Parse(fieldInfo.GetCustomAttribute<MappingConcurrencyAttribute>(), typeMetadata, memberMetadata);
-        }
-
-        public void Parse(PropertyInfo propertyInfo, TypeMetadata typeMetadata, MemberMetadata memberMetadata)
-        {
-            Parse(propertyInfo.GetCustomAttribute<MappingConcurrencyAttribute>(), typeMetadata, memberMetadata);
-        }
-
-        private void Parse(MappingConcurrencyAttribute attribute, TypeMetadata typeMetadata, MemberMetadata memberMetadata)
+        protected override void Parse(MappingConcurrencyAttribute attribute, TypeMetadata typeMetadata, MemberMetadata memberMetadata)
         {
             if (attribute != null)
             {
@@ -47,6 +38,10 @@ namespace OhmSharp.Mapping
                 if (typeMetadata.ConcurrencyMember != null)
                     throw new OhmSharpInvalidSchemaException(typeMetadata.Type,
                         string.Format("Type {0} cannot contain more than one member marked with MappingConcurrency.", typeMetadata.Type.FullName));
+
+                if (memberMetadata.FormatProvider != null && ((DateTimeConvertionInfo)memberMetadata.FormatProvider).DateOnly)
+                    throw new OhmSharpInvalidSchemaException(typeMetadata.Type, memberMetadata.Name,
+                        string.Format("Member {0} of {1} marked with MappingConcurrency cannot use DateTimeConvertionInfo.AsDate.", memberMetadata.Name, typeMetadata.Type.FullName));
 
                 memberMetadata.Attributes |= MemberAttributes.Mapped;
                 typeMetadata.ConcurrencyMember = memberMetadata;

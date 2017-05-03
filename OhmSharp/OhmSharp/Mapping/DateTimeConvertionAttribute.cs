@@ -33,19 +33,9 @@ namespace OhmSharp.Mapping
         }
     }
 
-    internal class DateTimeConvertionAttributeParser : IMemberAttributeParser
+    internal class DateTimeConvertionAttributeParser : MemberAttributeParser<DateTimeConvertionAttribute>
     {
-        public void Parse(FieldInfo fieldInfo, TypeMetadata typeMetadata, MemberMetadata memberMetadata)
-        {
-            Parse(fieldInfo.GetCustomAttribute<DateTimeConvertionAttribute>(), typeMetadata, memberMetadata);
-        }
-
-        public void Parse(PropertyInfo propertyInfo, TypeMetadata typeMetadata, MemberMetadata memberMetadata)
-        {
-            Parse(propertyInfo.GetCustomAttribute<DateTimeConvertionAttribute>(), typeMetadata, memberMetadata);
-        }
-
-        private void Parse(DateTimeConvertionAttribute attribute, TypeMetadata typeMetadata, MemberMetadata memberMetadata)
+        protected override void Parse(DateTimeConvertionAttribute attribute, TypeMetadata typeMetadata, MemberMetadata memberMetadata)
         {
             if (attribute != null)
             {
@@ -56,9 +46,13 @@ namespace OhmSharp.Mapping
                     throw new OhmSharpInvalidSchemaException(typeMetadata.Type, memberMetadata.Name,
                         string.Format("Member {0} of {1} cannot be marked with both DateTimeConvertion and MappingIgnore.", memberMetadata.Name, typeMetadata.Type.FullName));
 
-                if (!memberMetadata.Type.GetTypeInfo().IsEnum)
+                if (memberMetadata.Type != typeof(DateTime))
                     throw new OhmSharpInvalidSchemaException(typeMetadata.Type,
                         string.Format("Member {0} of {1} not of type DateTime cannot be marked with DateTimeConvertion.", memberMetadata.Name, typeMetadata.Type.FullName));
+
+                if (memberMetadata == typeMetadata.ConcurrencyMember && attribute.ConvertionInfo.DateOnly)
+                    throw new OhmSharpInvalidSchemaException(typeMetadata.Type, memberMetadata.Name,
+                        string.Format("Member {0} of {1} marked with MappingConcurrency cannot use DateTimeConvertionInfo.AsDate.", memberMetadata.Name, typeMetadata.Type.FullName));
 
                 memberMetadata.Attributes |= MemberAttributes.Mapped;
                 memberMetadata.FormatProvider = attribute.ConvertionInfo;

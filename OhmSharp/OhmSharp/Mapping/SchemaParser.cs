@@ -5,18 +5,18 @@ using System.Reflection;
 
 namespace OhmSharp.Mapping
 {
-    internal interface ITypeAttributeParser
+    internal interface ITypeParser
     {
         void Parse(TypeInfo typeInfo, TypeMetadata typeMetadata);
     }
 
-    internal interface IMemberAttributeParser
+    internal interface IMemberParser
     {
         void Parse(FieldInfo fieldInfo, TypeMetadata typeMetadata, MemberMetadata memberMetadata);
         void Parse(PropertyInfo propertyInfo, TypeMetadata typeMetadata, MemberMetadata memberMetadata);
     }
 
-    internal static class SchemaParser
+    internal static class MetadataParser
     {
         internal static TypeMetadata Parse(Type type)
         {
@@ -52,17 +52,17 @@ namespace OhmSharp.Mapping
             return typeMetadate;
         }
 
-        static SchemaParser()
+        static MetadataParser()
         {
-            _typeParsers = new List<ITypeAttributeParser>
+            _typeParsers = new List<ITypeParser>
             {
-                new DefaultTypeParser(),
+                new BasicTypeParser(),
                 new MappingObjectAttributeParser(),
             };
 
-            _memberParsers = new List<IMemberAttributeParser>
+            _memberParsers = new List<IMemberParser>
             {
-                new DefaultMemberParser(),
+                new BasicMemberParser(),
                 new MappingIgnoreAttributeParser(),
                 new MappingMemberAttributeParser(),
                 new MappingKeyAttributeParser(),
@@ -73,11 +73,11 @@ namespace OhmSharp.Mapping
             };
         }
 
-        private static List<ITypeAttributeParser> _typeParsers;
-        private static List<IMemberAttributeParser> _memberParsers;
+        private static List<ITypeParser> _typeParsers;
+        private static List<IMemberParser> _memberParsers;
     }
 
-    internal class DefaultTypeParser : ITypeAttributeParser
+    internal class BasicTypeParser : ITypeParser
     {
         public void Parse(TypeInfo typeInfo, TypeMetadata typeMetadata)
         {
@@ -101,11 +101,14 @@ namespace OhmSharp.Mapping
         }
     }
 
-    internal class DefaultMemberParser : IMemberAttributeParser
+    internal class BasicMemberParser : IMemberParser
     {
         public void Parse(FieldInfo fieldInfo, TypeMetadata typeMetadata, MemberMetadata memberMetadata)
         {
             memberMetadata.Attributes = MemberAttributes.Field;
+
+            // TODO: check type support
+
             if ((!fieldInfo.IsPublic && !fieldInfo.IsFamily) || fieldInfo.IsStatic ||
                 fieldInfo.IsSpecialName || fieldInfo.IsLiteral || fieldInfo.IsInitOnly)
                 memberMetadata.Attributes |= MemberAttributes.Invalid;
@@ -117,6 +120,9 @@ namespace OhmSharp.Mapping
         public void Parse(PropertyInfo propertyInfo, TypeMetadata typeMetadata, MemberMetadata memberMetadata)
         {
             memberMetadata.Attributes = MemberAttributes.Property;
+
+            // TODO: check type support
+
             if (!propertyInfo.CanRead || (!propertyInfo.GetMethod.IsPublic && !propertyInfo.GetMethod.IsFamily) ||
                 propertyInfo.GetMethod.IsStatic || propertyInfo.GetIndexParameters().Length > 0)
                 memberMetadata.Attributes |= MemberAttributes.Invalid;

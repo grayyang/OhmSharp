@@ -33,19 +33,9 @@ namespace OhmSharp.Mapping
         }
     }
 
-    internal class EnumConvertionAttributeParser : IMemberAttributeParser
+    internal class EnumConvertionAttributeParser : MemberAttributeParser<EnumConvertionAttribute>
     {
-        public void Parse(FieldInfo fieldInfo, TypeMetadata typeMetadata, MemberMetadata memberMetadata)
-        {
-            Parse(fieldInfo.GetCustomAttribute<EnumConvertionAttribute>(), typeMetadata, memberMetadata);
-        }
-
-        public void Parse(PropertyInfo propertyInfo, TypeMetadata typeMetadata, MemberMetadata memberMetadata)
-        {
-            Parse(propertyInfo.GetCustomAttribute<EnumConvertionAttribute>(), typeMetadata, memberMetadata);
-        }
-
-        private void Parse(EnumConvertionAttribute attribute, TypeMetadata typeMetadata, MemberMetadata memberMetadata)
+        protected override void Parse(EnumConvertionAttribute attribute, TypeMetadata typeMetadata, MemberMetadata memberMetadata)
         {
             if (attribute != null)
             {

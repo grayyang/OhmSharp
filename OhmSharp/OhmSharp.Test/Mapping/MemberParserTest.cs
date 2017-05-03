@@ -12,7 +12,7 @@ namespace OhmSharp.Test.Mapping
         [TestMethod]
         public void ParseField()
         {
-            var metadata = SchemaParser.Parse(typeof(TestClassWithField));
+            var metadata = MetadataParser.Parse(typeof(TestClassWithField));
             Assert.AreEqual(4, metadata.TypeMembers.Count);
 
             var publicField = metadata.TypeMembers.First(m => m.Name == "PublicField");
@@ -47,7 +47,7 @@ namespace OhmSharp.Test.Mapping
         [TestMethod]
         public void ParseProperty()
         {
-            var metadata = SchemaParser.Parse(typeof(TestClassWithProperty));
+            var metadata = MetadataParser.Parse(typeof(TestClassWithProperty));
             Assert.AreEqual(9, metadata.TypeMembers.Count(m => (m.Attributes & MemberAttributes.Property) == MemberAttributes.Property));
 
             var publicProperty = metadata.TypeMembers.First(m => m.Name == "PublicProperty");

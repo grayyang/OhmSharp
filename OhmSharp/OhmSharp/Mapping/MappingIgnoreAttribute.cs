@@ -16,19 +16,9 @@ namespace OhmSharp.Mapping
         { }
     }
 
-    internal class MappingIgnoreAttributeParser : IMemberAttributeParser
+    internal class MappingIgnoreAttributeParser : MemberAttributeParser<MappingIgnoreAttribute>
     {
-        public void Parse(FieldInfo fieldInfo, TypeMetadata typeMetadata, MemberMetadata memberMetadata)
-        {
-            Parse(fieldInfo.GetCustomAttribute<MappingIgnoreAttribute>(), typeMetadata, memberMetadata);
-        }
-
-        public void Parse(PropertyInfo propertyInfo, TypeMetadata typeMetadata, MemberMetadata memberMetadata)
-        {
-            Parse(propertyInfo.GetCustomAttribute<MappingIgnoreAttribute>(), typeMetadata, memberMetadata);
-        }
-
-        private void Parse(MappingIgnoreAttribute attribute, TypeMetadata typeMetadata, MemberMetadata memberMetadata)
+        protected override void Parse(MappingIgnoreAttribute attribute, TypeMetadata typeMetadata, MemberMetadata memberMetadata)
         {
             if (attribute != null)
             {

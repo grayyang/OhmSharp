@@ -11,7 +11,7 @@ namespace OhmSharp.Test.Mapping
         [TestMethod]
         public void ParseMemberMarkedMappingMember()
         {
-            var metadata = SchemaParser.Parse(typeof(TestClassWithMappingMember));
+            var metadata = MetadataParser.Parse(typeof(TestClassWithMappingMember));
 
             var member = metadata.TypeMembers.First(m => m.Name == "MemberMarkedMappingMember");
             Assert.AreEqual(MemberAttributes.Property | MemberAttributes.Mapped, member.Attributes);
@@ -25,7 +25,7 @@ namespace OhmSharp.Test.Mapping
         [TestMethod]
         public void ParseMemberMarkedMappingIgnore()
         {
-            var metadata = SchemaParser.Parse(typeof(TestClassWithMappingIgnore));
+            var metadata = MetadataParser.Parse(typeof(TestClassWithMappingIgnore));
 
             var member = metadata.TypeMembers.First(m => m.Name == "MemberMarkedMappingIgnore");
             Assert.AreEqual(MemberAttributes.Property | MemberAttributes.Ignored, member.Attributes);
@@ -37,13 +37,13 @@ namespace OhmSharp.Test.Mapping
         [TestMethod]
         public void ParseInvalidMemberMarkedMappingMemberShouldThrow()
         {
-            Assert.ThrowsException<OhmSharpInvalidSchemaException>(() => SchemaParser.Parse(typeof(TestClassWithInvalidMappingMember)));
+            Assert.ThrowsException<OhmSharpInvalidSchemaException>(() => MetadataParser.Parse(typeof(TestClassWithInvalidMappingMember)));
         }
 
         [TestMethod]
         public void ParseMemberMarkedMappingMemberAndMappingIgnoreShouldThrow()
         {
-            Assert.ThrowsException<OhmSharpInvalidSchemaException>(() => SchemaParser.Parse(typeof(TestClassWithMappingMemberAndMappingIgnore)));
+            Assert.ThrowsException<OhmSharpInvalidSchemaException>(() => MetadataParser.Parse(typeof(TestClassWithMappingMemberAndMappingIgnore)));
         }
     }
 

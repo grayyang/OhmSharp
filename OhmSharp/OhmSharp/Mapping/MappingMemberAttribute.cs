@@ -30,19 +30,9 @@ namespace OhmSharp.Mapping
         }
     }
 
-    internal class MappingMemberAttributeParser : IMemberAttributeParser
+    internal class MappingMemberAttributeParser : MemberAttributeParser<MappingMemberAttribute>
     {
-        public void Parse(FieldInfo fieldInfo, TypeMetadata typeMetadata, MemberMetadata memberMetadata)
-        {
-            Parse(fieldInfo.GetCustomAttribute<MappingMemberAttribute>(), typeMetadata, memberMetadata);
-        }
-
-        public void Parse(PropertyInfo propertyInfo, TypeMetadata typeMetadata, MemberMetadata memberMetadata)
-        {
-            Parse(propertyInfo.GetCustomAttribute<MappingMemberAttribute>(), typeMetadata, memberMetadata);
-        }
-
-        private void Parse(MappingMemberAttribute attribute, TypeMetadata typeMetadata, MemberMetadata memberMetadata)
+        protected override void Parse(MappingMemberAttribute attribute, TypeMetadata typeMetadata, MemberMetadata memberMetadata)
         {
             if (attribute != null)
             {
