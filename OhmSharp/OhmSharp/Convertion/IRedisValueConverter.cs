@@ -5,7 +5,7 @@ using System;
 namespace OhmSharp.Convertion
 {
     /// <summary>
-    /// Interface to convert type <typeparamref name="T"/> to or from RedisValue
+    /// Defines methods that converts type <typeparamref name="T"/> to or from RedisValue
     /// </summary>
     /// <typeparam name="T">type to convert</typeparam>
     public interface IRedisValueConverter<T> : IRedisValueConverter
@@ -27,7 +27,7 @@ namespace OhmSharp.Convertion
     }
 
     /// <summary>
-    /// Interface to convert object to or from RedisValue
+    /// Defines methods that converts object to or from RedisValue
     /// </summary>
     public interface IRedisValueConverter
     {

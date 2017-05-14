@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 
 namespace OhmSharp.Mapping
 {
@@ -23,7 +22,7 @@ namespace OhmSharp.Mapping
         {
             if (attribute != null)
             {
-                if ((memberMetadata.Attributes & MemberAttributes.Invalid) == MemberAttributes.Invalid)
+                if ((memberMetadata.Attributes & MemberAttributes.Unmappable) == MemberAttributes.Unmappable)
                     throw new OhmSharpInvalidSchemaException(typeMetadata.Type, memberMetadata.Name,
                         string.Format("Member {0} of {1} cannot be marked with MappingKey.", memberMetadata.Name, typeMetadata.Type.FullName));
                 if ((memberMetadata.Attributes & MemberAttributes.Ignored) == MemberAttributes.Ignored)

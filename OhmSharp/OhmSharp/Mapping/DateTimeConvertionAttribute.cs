@@ -1,6 +1,5 @@
 ﻿using OhmSharp.Convertion;
 using System;
-using System.Reflection;
 
 namespace OhmSharp.Mapping
 {
@@ -11,7 +10,7 @@ namespace OhmSharp.Mapping
     {
         /// <summary>
         /// Convertion info controls the format of DateTime mapped
-        /// Default value is DateTimeConvertionInfo.AsLocalTime
+        /// Default value is <see cref="DateTimeConvertionInfo.AsLocalTime"/>
         /// </summary>
         public DateTimeConvertionInfo ConvertionInfo { get; private set; }
 
@@ -39,14 +38,14 @@ namespace OhmSharp.Mapping
         {
             if (attribute != null)
             {
-                if ((memberMetadata.Attributes & MemberAttributes.Invalid) == MemberAttributes.Invalid)
+                if ((memberMetadata.Attributes & MemberAttributes.Unmappable) == MemberAttributes.Unmappable)
                     throw new OhmSharpInvalidSchemaException(typeMetadata.Type, memberMetadata.Name,
                         string.Format("Member {0} of {1} cannot be marked with DateTimeConvertion.", memberMetadata.Name, typeMetadata.Type.FullName));
                 if ((memberMetadata.Attributes & MemberAttributes.Ignored) == MemberAttributes.Ignored)
                     throw new OhmSharpInvalidSchemaException(typeMetadata.Type, memberMetadata.Name,
                         string.Format("Member {0} of {1} cannot be marked with both DateTimeConvertion and MappingIgnore.", memberMetadata.Name, typeMetadata.Type.FullName));
 
-                if (memberMetadata.Type != typeof(DateTime))
+                if (memberMetadata.Type != typeof(DateTime) && memberMetadata.Type != typeof(DateTime?))
                     throw new OhmSharpInvalidSchemaException(typeMetadata.Type,
                         string.Format("Member {0} of {1} not of type DateTime cannot be marked with DateTimeConvertion.", memberMetadata.Name, typeMetadata.Type.FullName));
 

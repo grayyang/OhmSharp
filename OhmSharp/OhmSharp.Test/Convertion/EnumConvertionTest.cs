@@ -12,6 +12,8 @@ namespace OhmSharp.Test.Convertion
         [TestMethod]
         public void ConvertEnumUsingDefaultRepresent()
         {
+            Assert.IsTrue(EnumConverter.IsEnum(typeof(TestEnum)));
+
             TestEnum originEnum = TestEnum.Enum2;
             TestFlag originFlag = TestFlag.Flag1 | TestFlag.Flag2;
 
@@ -60,10 +62,30 @@ namespace OhmSharp.Test.Convertion
             Assert.IsTrue(IsNumeric(redisValFlag));
         }
 
+        [TestMethod]
+        public void ConvertNullableEnumUsingDefaultRepresent()
+        {
+            Assert.IsTrue(NullableEnumConverter.IsNullableEnum(typeof(TestEnum?)));
+
+            TestEnum? origin = TestEnum.Enum2;
+            var converted = ConvertNullable(origin);
+            Assert.IsNotNull(converted);
+            Assert.AreEqual(origin, converted);
+
+            var nil = ConvertNullable<TestEnum?>(null);
+            Assert.IsNull(nil);
+        }
+
         private T Convert<T>(T origin, IFormatProvider provider, out RedisValue redisVal)
         {
             redisVal = EnumConverter.ConvertTo(origin, typeof(T), provider);
             return (T)EnumConverter.ConvertFrom(redisVal, typeof(T), provider);
+        }
+
+        private T ConvertNullable<T>(T origin)
+        {
+            var redisVal = NullableEnumConverter.ConvertTo(origin, typeof(T), null);
+            return (T)NullableEnumConverter.ConvertFrom(redisVal, typeof(T), null);
         }
 
         private bool IsNumeric(RedisValue value)

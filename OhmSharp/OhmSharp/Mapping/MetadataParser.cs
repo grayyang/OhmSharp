@@ -107,11 +107,9 @@ namespace OhmSharp.Mapping
         {
             memberMetadata.Attributes = MemberAttributes.Field;
 
-            // TODO: check type support
-
             if ((!fieldInfo.IsPublic && !fieldInfo.IsFamily) || fieldInfo.IsStatic ||
                 fieldInfo.IsSpecialName || fieldInfo.IsLiteral || fieldInfo.IsInitOnly)
-                memberMetadata.Attributes |= MemberAttributes.Invalid;
+                memberMetadata.Attributes |= MemberAttributes.Unmappable;
 
             memberMetadata.Getter = GetterSetterAttributes.Defined;
             memberMetadata.Setter = GetterSetterAttributes.Defined;
@@ -121,11 +119,9 @@ namespace OhmSharp.Mapping
         {
             memberMetadata.Attributes = MemberAttributes.Property;
 
-            // TODO: check type support
-
             if (!propertyInfo.CanRead || (!propertyInfo.GetMethod.IsPublic && !propertyInfo.GetMethod.IsFamily) ||
                 propertyInfo.GetMethod.IsStatic || propertyInfo.GetIndexParameters().Length > 0)
-                memberMetadata.Attributes |= MemberAttributes.Invalid;
+                memberMetadata.Attributes |= MemberAttributes.Unmappable;
 
             if (propertyInfo.CanRead)
             {

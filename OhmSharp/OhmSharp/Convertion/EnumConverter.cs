@@ -1,15 +1,26 @@
 ﻿using StackExchange.Redis;
 using System;
+using System.Reflection;
 
 namespace OhmSharp.Convertion
 {
     /// <summary>
-    /// Converter that converts enum to or from RedisValue
+    /// Converter that converts Enum to or from RedisValue
     /// </summary>
     internal static class EnumConverter
     {
         /// <summary>
-        /// Convert enum to RedisValue
+        /// Whether or not type is Enum
+        /// </summary>
+        /// <param name="type">type to check</param>
+        /// <returns>ture if type is Enum; otherwise, false</returns>
+        public static bool IsEnum(Type type)
+        {
+            return type.GetTypeInfo().IsEnum;
+        }
+
+        /// <summary>
+        /// Convert Enum to RedisValue
         /// </summary>
         /// <param name="value">enum value to convert</param>
         /// <param name="type">enum type to convert</param>
@@ -26,7 +37,7 @@ namespace OhmSharp.Convertion
         }
 
         /// <summary>
-        /// Convert enum from RedisValue
+        /// Convert Enum from RedisValue
         /// </summary>
         /// <param name="value">enum value to convert</param>
         /// <param name="type">enum type to convert</param>
@@ -35,6 +46,47 @@ namespace OhmSharp.Convertion
         public static object ConvertFrom(RedisValue value, Type type, IFormatProvider provider)
         {
             return Enum.Parse(type, value);
+        }
+    }
+
+    /// <summary>
+    /// Converter that converts Nullable<Enum> to or from RedisValue
+    /// </summary>
+    internal static class NullableEnumConverter
+    {
+        /// <summary>
+        /// Whether or not type is Nullable<Enum>
+        /// </summary>
+        /// <param name="type">type to check</param>
+        /// <returns>ture if type is Nullable<Enum>; otherwise, false</returns>
+        public static bool IsNullableEnum(Type type)
+        {
+            return type.IsConstructedGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>) &&
+                Nullable.GetUnderlyingType(type).GetTypeInfo().IsEnum;
+        }
+
+        /// <summary>
+        /// Convert Nullable<Enum> to RedisValue
+        /// </summary>
+        /// <param name="value">Nullable<Enum> value to convert</param>
+        /// <param name="type">Nullable<Enum> type to convert</param>
+        /// <param name="provider">provider controls how enum value is converted</param>
+        /// <returns>RedisValue represents Nullable<Enum> value</returns>
+        public static RedisValue ConvertTo(object value, Type type, IFormatProvider provider)
+        {
+            return value == null ? RedisValue.Null : EnumConverter.ConvertTo(value, Nullable.GetUnderlyingType(type), provider);
+        }
+
+        /// <summary>
+        /// Convert Nullable<Enum> from RedisValue
+        /// </summary>
+        /// <param name="value">Nullable<Enum> value to convert</param>
+        /// <param name="type">Nullable<Enum> type to convert</param>
+        /// <param name="provider">provider controls how enum value is converted</param>
+        /// <returns>Nullable<Enum> value contained in RedisValue</returns>
+        public static object ConvertFrom(RedisValue value, Type type, IFormatProvider provider)
+        {
+            return value.IsNull ? null : EnumConverter.ConvertFrom(value, Nullable.GetUnderlyingType(type), provider);
         }
     }
 

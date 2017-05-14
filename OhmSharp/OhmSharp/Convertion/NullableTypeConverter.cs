@@ -18,7 +18,7 @@ namespace OhmSharp.Convertion
 
         public T? ConvertFrom(RedisValue value, IFormatProvider provider)
         {
-            return value.IsNull ? null : new Nullable<T>(_valueTypeConverter.ConvertFrom(value, provider));
+            return value.IsNull ? null : new T?(_valueTypeConverter.ConvertFrom(value, provider));
         }
 
         public RedisValue ConvertTo(T? value, IFormatProvider provider)

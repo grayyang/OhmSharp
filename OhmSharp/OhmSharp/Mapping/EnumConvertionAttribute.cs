@@ -11,7 +11,7 @@ namespace OhmSharp.Mapping
     {
         /// <summary>
         /// Convertion info controls the format of Enum mapped
-        /// Default value
+        /// Default value is <see cref="EnumConvertionInfo.AsString"/>
         /// </summary>
         public EnumConvertionInfo ConvertionInfo { get; private set; }
 
@@ -39,14 +39,14 @@ namespace OhmSharp.Mapping
         {
             if (attribute != null)
             {
-                if ((memberMetadata.Attributes & MemberAttributes.Invalid) == MemberAttributes.Invalid)
+                if ((memberMetadata.Attributes & MemberAttributes.Unmappable) == MemberAttributes.Unmappable)
                     throw new OhmSharpInvalidSchemaException(typeMetadata.Type, memberMetadata.Name,
                         string.Format("Member {0} of {1} cannot be marked with EnumConvertion.", memberMetadata.Name, typeMetadata.Type.FullName));
                 if ((memberMetadata.Attributes & MemberAttributes.Ignored) == MemberAttributes.Ignored)
                     throw new OhmSharpInvalidSchemaException(typeMetadata.Type, memberMetadata.Name,
                         string.Format("Member {0} of {1} cannot be marked with both EnumConvertion and MappingIgnore.", memberMetadata.Name, typeMetadata.Type.FullName));
 
-                if (!memberMetadata.Type.GetTypeInfo().IsEnum)
+                if (!EnumConverter.IsEnum(memberMetadata.Type) && !NullableEnumConverter.IsNullableEnum(memberMetadata.Type))
                     throw new OhmSharpInvalidSchemaException(typeMetadata.Type,
                         string.Format("Member {0} of {1} not of type Enum cannot be marked with EnumConvertion.", memberMetadata.Name, typeMetadata.Type.FullName));
 

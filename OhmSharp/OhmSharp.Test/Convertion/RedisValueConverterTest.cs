@@ -10,6 +10,20 @@ namespace OhmSharp.Test.Convertion
     public class RedisValueConverterTest
     {
         [TestMethod]
+        public void CheckConvertable()
+        {
+            RedisValueConverter.RegisterConverter(typeof(object), new MockCustomerConverter());
+            Assert.IsTrue(RedisValueConverter.IsConvertable<int>());
+            Assert.IsTrue(RedisValueConverter.IsConvertable<int?>());
+            Assert.IsTrue(RedisValueConverter.IsConvertable<TestEnum>());
+            Assert.IsTrue(RedisValueConverter.IsConvertable<TestEnum?>());
+            Assert.IsTrue(RedisValueConverter.IsConvertable<object>());
+
+            RedisValueConverter.UnregisterConverter<object>();
+            Assert.IsFalse(RedisValueConverter.IsConvertable<object>());
+        }
+
+        [TestMethod]
         public void ConvertBuildinTypes()
         {
             var origin = Guid.NewGuid();
@@ -22,6 +36,17 @@ namespace OhmSharp.Test.Convertion
         public void ConvertEnum()
         {
             var origin = TestEnum.Enum2;
+            var converted = Convert(origin);
+
+            Assert.AreEqual(origin, converted);
+        }
+
+        [TestMethod]
+        public void ConvertNullableEnum()
+        {
+            Assert.IsNull(Convert<TestEnum?>(null));
+
+            TestEnum? origin = TestEnum.Enum2;
             var converted = Convert(origin);
 
             Assert.AreEqual(origin, converted);

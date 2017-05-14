@@ -31,7 +31,7 @@ namespace OhmSharp.Test.Mapping
             Assert.AreEqual(MemberAttributes.Property | MemberAttributes.Ignored, member.Attributes);
 
             var staticMember = metadata.TypeMembers.First(m => m.Name == "StaticMemberMarkedMappingIgnore");
-            Assert.AreEqual(MemberAttributes.Property | MemberAttributes.Ignored | MemberAttributes.Invalid, staticMember.Attributes);
+            Assert.AreEqual(MemberAttributes.Property | MemberAttributes.Ignored | MemberAttributes.Unmappable, staticMember.Attributes);
         }
 
         [TestMethod]

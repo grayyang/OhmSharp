@@ -70,9 +70,9 @@ namespace OhmSharp.Mapping
         /// </summary>
         Ignored = 0x2,
         /// <summary>
-        /// member is not valid to map (static or private)
+        /// member is not able to be mapped (static or private)
         /// </summary>
-        Invalid = 0x4,
+        Unmappable = 0x4,
         /// <summary>
         /// member is a property
         /// </summary>

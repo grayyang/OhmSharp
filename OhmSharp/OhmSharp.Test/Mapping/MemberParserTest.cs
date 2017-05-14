@@ -32,14 +32,14 @@ namespace OhmSharp.Test.Mapping
             var privateField = metadata.TypeMembers.First(m => m.Name == "PrivateField");
             Assert.AreEqual(typeof(int), privateField.Type);
             Assert.AreEqual("PrivateField", privateField.MemberName);
-            Assert.AreEqual(MemberAttributes.Field | MemberAttributes.Invalid, privateField.Attributes);
+            Assert.AreEqual(MemberAttributes.Field | MemberAttributes.Unmappable, privateField.Attributes);
             Assert.AreEqual(GetterSetterAttributes.Defined, privateField.Getter);
             Assert.AreEqual(GetterSetterAttributes.Defined, privateField.Setter);
 
             var staticField = metadata.TypeMembers.First(m => m.Name == "StaticField");
             Assert.AreEqual(typeof(int), staticField.Type);
             Assert.AreEqual("StaticField", staticField.MemberName);
-            Assert.AreEqual(MemberAttributes.Field | MemberAttributes.Invalid, staticField.Attributes);
+            Assert.AreEqual(MemberAttributes.Field | MemberAttributes.Unmappable, staticField.Attributes);
             Assert.AreEqual(GetterSetterAttributes.Defined, staticField.Getter);
             Assert.AreEqual(GetterSetterAttributes.Defined, staticField.Setter);
         }
@@ -67,7 +67,7 @@ namespace OhmSharp.Test.Mapping
             var privateProperty = metadata.TypeMembers.First(m => m.Name == "PrivateProperty");
             Assert.AreEqual(typeof(int), privateProperty.Type);
             Assert.AreEqual("PrivateProperty", privateProperty.MemberName);
-            Assert.AreEqual(MemberAttributes.Property | MemberAttributes.Invalid, privateProperty.Attributes);
+            Assert.AreEqual(MemberAttributes.Property | MemberAttributes.Unmappable, privateProperty.Attributes);
             Assert.AreEqual(GetterSetterAttributes.None, privateProperty.Getter);
             Assert.AreEqual(GetterSetterAttributes.None, privateProperty.Setter);
 
@@ -88,7 +88,7 @@ namespace OhmSharp.Test.Mapping
             var staticProperty = metadata.TypeMembers.First(m => m.Name == "StaticProperty");
             Assert.AreEqual(typeof(int), staticProperty.Type);
             Assert.AreEqual("StaticProperty", staticProperty.MemberName);
-            Assert.AreEqual(MemberAttributes.Property | MemberAttributes.Invalid, staticProperty.Attributes);
+            Assert.AreEqual(MemberAttributes.Property | MemberAttributes.Unmappable, staticProperty.Attributes);
             Assert.AreEqual(GetterSetterAttributes.None, staticProperty.Getter);
             Assert.AreEqual(GetterSetterAttributes.None, staticProperty.Setter);
 
@@ -102,12 +102,12 @@ namespace OhmSharp.Test.Mapping
             var setOnlyProperty = metadata.TypeMembers.First(m => m.Name == "SetOnlyProperty");
             Assert.AreEqual(typeof(int), setOnlyProperty.Type);
             Assert.AreEqual("SetOnlyProperty", setOnlyProperty.MemberName);
-            Assert.AreEqual(MemberAttributes.Property | MemberAttributes.Invalid, setOnlyProperty.Attributes);
+            Assert.AreEqual(MemberAttributes.Property | MemberAttributes.Unmappable, setOnlyProperty.Attributes);
             Assert.AreEqual(GetterSetterAttributes.None, setOnlyProperty.Getter);
             Assert.AreEqual(GetterSetterAttributes.Defined, setOnlyProperty.Setter);
 
             var indexerProperty = metadata.TypeMembers.First(m => m.Name == "Item");
-            Assert.AreEqual(MemberAttributes.Property | MemberAttributes.Invalid, indexerProperty.Attributes);
+            Assert.AreEqual(MemberAttributes.Property | MemberAttributes.Unmappable, indexerProperty.Attributes);
             Assert.AreEqual(GetterSetterAttributes.Defined, indexerProperty.Getter);
             Assert.AreEqual(GetterSetterAttributes.Defined, indexerProperty.Setter);
         }

@@ -11,13 +11,33 @@ namespace OhmSharp.Convertion
     public static class RedisValueConverter
     {
         /// <summary>
+        /// Whether or not <typeparamref name="T"/> can be converted to or from RedisValue
+        /// </summary>
+        /// <typeparam name="T">type to check if convertable</typeparam>
+        /// <returns>true if type is convertable; otherwose false</returns>
+        public static bool IsConvertable<T>()
+        {
+            return IsConvertable(typeof(T));
+        }
+
+        /// <summary>
+        /// Whether or not <paramref name="type"/> can be converted to or from RedisValue
+        /// </summary>
+        /// <param name="type">type to check if convertable</param>
+        /// <returns>true if type is convertable; otherwose false</returns>
+        public static bool IsConvertable(Type type)
+        {
+            return _customConverters.ContainsKey(type) || _buildinConverters.ContainsKey(type) ||
+                EnumConverter.IsEnum(type) || NullableEnumConverter.IsNullableEnum(type);
+        }
+
+        /// <summary>
         /// Convert <paramref name="value"/> of type <typeparamref name="T"/> to RedisValue
         /// </summary>
         /// <typeparam name="T">type of value to convert</typeparam>
         /// <param name="value">value to convert to RedisValue</param>
         /// <param name="provider">optional provider controls how value is converted</param>
         /// <returns>RedisValue contains the underlying value</returns>
-        /// <exception cref="ArgumentNullException">throw if <paramref name="value"/> or <paramref name="type"/> is null</exception>
         /// <exception cref="OhmSharpConvertionException">throw if convertion failed</exception>
         public static RedisValue ConvertTo<T>(T value, IFormatProvider provider = null)
         {
@@ -31,12 +51,10 @@ namespace OhmSharp.Convertion
         /// <param name="type">type of value to convert</param>
         /// <param name="provider">optional provider controls how value is converted</param>
         /// <returns>RedisValue contains the underlying value</returns>
-        /// <exception cref="ArgumentNullException">throw if <paramref name="value"/> or <paramref name="type"/> is null</exception>
+        /// <exception cref="ArgumentNullException">throw if <paramref name="type"/> is null</exception>
         /// <exception cref="OhmSharpConvertionException">throw if convertion failed</exception>
         public static RedisValue ConvertTo(object value, Type type, IFormatProvider provider = null)
         {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
             if (type == null)
                 throw new ArgumentNullException(nameof(type));
 
@@ -47,14 +65,19 @@ namespace OhmSharp.Convertion
                     return _customConverters[type].ConvertTo(value, provider);
                 }
 
-                if (type.GetTypeInfo().IsEnum)
+                if (_buildinConverters.ContainsKey(type))
+                {
+                    return _buildinConverters[type].ConvertTo(value, provider);
+                }
+
+                if (EnumConverter.IsEnum(type))
                 {
                     return EnumConverter.ConvertTo(value, type, provider);
                 }
 
-                if (_buildinConverters.ContainsKey(type))
+                if (NullableEnumConverter.IsNullableEnum(type))
                 {
-                    return _buildinConverters[type].ConvertTo(value, provider);
+                    return NullableEnumConverter.ConvertTo(value, type, provider);
                 }
             }
             catch (Exception ex)
@@ -102,14 +125,19 @@ namespace OhmSharp.Convertion
                     return _customConverters[type].ConvertFrom(value, provider);
                 }
 
-                if (type.GetTypeInfo().IsEnum)
+                if (_buildinConverters.ContainsKey(type))
+                {
+                    return _buildinConverters[type].ConvertFrom(value, provider);
+                }
+
+                if (EnumConverter.IsEnum(type))
                 {
                     return EnumConverter.ConvertFrom(value, type, provider);
                 }
 
-                if (_buildinConverters.ContainsKey(type))
+                if (NullableEnumConverter.IsNullableEnum(type))
                 {
-                    return _buildinConverters[type].ConvertFrom(value, provider);
+                    return NullableEnumConverter.ConvertFrom(value, type, provider);
                 }
             }
             catch (Exception ex)
